@@ -68,7 +68,6 @@ int main() {
         }
 
         res += first * 10 + last;
-        cout << first << " " << last << endl;
     }
 
     fp_in.close();
