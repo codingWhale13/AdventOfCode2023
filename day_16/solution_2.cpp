@@ -95,7 +95,7 @@ ll getEnergy(vector<string> &grid, vector<ll> start) {
     }
 
     return res;
-
+}
 
 int main() {
     ios::sync_with_stdio(false);
