@@ -29,7 +29,7 @@ int main() {
 
     ifstream fp_in("input.txt", ios::in);
 
-    map<string, vector<Rule>> instrucions;
+    map<string, vector<Rule>> instructions;
     string s;
     while (getline(fp_in, s)) {
         if (ln(s) == 0)
@@ -38,50 +38,46 @@ int main() {
         istringstream iss(s);
 
         string partName, thresholdStr, onSuccess;
-        char trash, category, inequality;
+        char trash, category, inequality, nextChar;
 
         getline(iss, partName, '{');
         vector<Rule> rules;
         while (true) {
-            iss >> category;
+            iss >> category >> nextChar;
 
-            streampos currentPos = iss.tellg();
-            iss.seekg(0, ios::end);
-            streampos endPos = iss.tellg();
-            streamsize remainingChars = endPos - currentPos;
-            iss.seekg(currentPos);
-
-            if (remainingChars < 5) {
-                // ups, actually not a category, but a terminal state
-                string terminalState = string(1, category) + "";
+            if (nextChar != '<' && nextChar != '>') {
+                string restOfString;
+                getline(iss, restOfString);
+                string terminalState = string(1, category) + string(1, nextChar) + restOfString;
+                terminalState = terminalState.substr(0, ln(terminalState) - 1); // remove '}' at end
                 rules.push_back({'?', '?', -1LL, terminalState});
                 break;
             } else {
-                iss >> inequality;
+                inequality = nextChar;
                 getline(iss, thresholdStr, ':');
                 ll threshold = stoll(thresholdStr);
                 getline(iss, onSuccess, ',');
                 rules.push_back({category, inequality, threshold, onSuccess});
             }
         }
-        instrucions[partName] = rules;
+        instructions[partName] = rules;
     }
 
     ll res = 0;
     while (getline(fp_in, s)) {
+        istringstream iss(s);
         char trash, category;
         map<char, ll> rating;
-        fp_in >> trash;
+        iss >> trash;
         ll value;
         rep(i, 4) {
-            fp_in >> category >> trash >> value >> trash;
+            iss >> category >> trash >> value >> trash;
             rating[category] = value;
         }
 
         string workflow = "in";
         while (workflow != "R" && workflow != "A") {
-            cout << workflow << endl;
-            repAll(rule, instrucions[workflow]) {
+            repAll(rule, instructions[workflow]) {
                 bool success = rule.inequality == '?' ||
                                rule.inequality == '>' && rating[rule.category] > rule.threshold ||
                                rule.inequality == '<' && rating[rule.category] < rule.threshold;
