@@ -16,7 +16,7 @@ const ll NINF = numeric_limits<ll>::min();
 const ll INF = numeric_limits<ll>::max();
 const ll MOD = 1000000007;
 
-/* EXPLANATION, as seen here: https://www.youtube.com/watch?v=99Mjs1i0JxU
+/* EXPLANATION, inspired by: https://www.youtube.com/watch?v=99Mjs1i0JxU
 - The amount of reachable tiles f(s) after s steps is quadratic, so we can do the following:
 1) Find 3 points on the quadratic by going x1, x2, x3 steps toward the edges of the diamond shaped reachable zones
 2) Use 3 point method to find out coefficients of f
@@ -34,7 +34,7 @@ vector<ll> getFUntil(ll maxStep, vector<vector<char>> gridTile) {
     if (factor % 2 == 0)
         factor++; // we want to start right in the middle
     ll S_NEW = S * factor;
-    
+
     vector<vector<char>> grid(S_NEW, vector<char>(S_NEW));
     rep(y, S_NEW)
         rep(x, S_NEW)
